@@ -7,29 +7,6 @@
   <meta name="description" content="Information about BRP Surveys, why you were contacted, how your data is used, incentives, and how to unsubscribe." />
 
   <style>
-    /* Spinner for Cognito form load */
-    .form-spinner-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 120px;
-    }
-
-    .spinner {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 3px solid rgba(0, 58, 93, 0.15);
-      border-top-color: #003a5d;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
     :root {
       --color-bg: #f4f6f9;
       --color-surface: #ffffff;
@@ -249,26 +226,6 @@
       gap: 18px;
     }
 
-    .info-card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      padding: 16px 18px;
-    }
-
-    .info-heading {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--color-primary);
-      margin: 0 0 6px;
-    }
-
-    .info-text {
-      font-size: 0.86rem;
-      color: var(--color-text-muted);
-      margin: 0;
-    }
-
     .form-card {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -403,32 +360,20 @@
 
           <!-- RIGHT COLUMN -->
           <aside class="side-column">
-            <div class="info-card">
-              <h3 class="info-heading">Summary</h3>
-              <p class="info-text">
-                Your information was shared with us in line with client privacy policies to conduct market research. We do not send ongoing communications.
-              </p>
-            </div>
-
             <div class="form-card">
-              <h3 class="info-heading">Optional: Request changes in writing</h3>
+              <h3 class="info-heading">Manage your contact preferences</h3>
               <p class="form-description">
-                You may submit an unsubscribe request, data request, or question here instead of emailing us.
+                Use this form if you would like to unsubscribe from future survey invitations, request changes to your information,
+                or ask a question about a specific survey invitation.
               </p>
 
-              <div id="cognito-form-wrapper">
-                <div id="cognito-spinner" class="form-spinner-wrapper">
-                  <div class="spinner" aria-label="Loading form…" role="status"></div>
-                </div>
-
-                <!-- Cognito form will render below -->
-                <script src="https://www.cognitoforms.com/f/seamless.js"
-                        data-key="NgGQHPhoGEahyWn3WTs5Sg"
-                        data-form="1"></script>
-              </div>
+              <!-- Cognito form embed -->
+              <script src="https://www.cognitoforms.com/f/seamless.js"
+                      data-key="NgGQHPhoGEahyWn3WTs5Sg"
+                      data-form="1"></script>
 
               <p class="form-hint" style="margin-top:6px;">
-                We will use this information solely to process and respond to your request.
+                We will use the information you provide solely to process and respond to your request.
               </p>
             </div>
           </aside>
@@ -441,26 +386,5 @@
       © 2025 Blue Ridge Partners. All Rights Reserved.
     </footer>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var wrapper = document.getElementById("cognito-form-wrapper");
-      var spinner = document.getElementById("cognito-spinner");
-      if (!wrapper || !spinner) return;
-
-      var attempts = 0;
-      var maxAttempts = 50; // ~15 seconds at 300ms
-      var interval = setInterval(function () {
-        attempts++;
-        var iframe = wrapper.querySelector("iframe");
-        if (iframe) {
-          spinner.style.display = "none";
-          clearInterval(interval);
-        } else if (attempts >= maxAttempts) {
-          clearInterval(interval);
-        }
-      }, 300);
-    });
-  </script>
 </body>
 </html>
