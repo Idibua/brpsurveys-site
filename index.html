@@ -2,79 +2,340 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BRP Surveys</title>
+  <title>BRP Surveys – Participant Information</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Information about BRP Surveys, why you were contacted, how your data is used, incentives, and how to unsubscribe." />
+
+/* Spinner for Cognito form load */
+.form-spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 58, 93, 0.15);
+  border-top-color: #003a5d;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+  
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      margin: 0; 
-      padding: 40px; 
-      background: #f8f8f8; 
+    :root {
+      --color-bg: #f4f6f9;
+      --color-surface: #ffffff;
+      --color-primary: #003a5d;
+      --color-primary-light: #005b8c;
+      --color-accent: #00a3e0;
+      --color-border: #dde3ec;
+      --color-text-main: #192333;
+      --color-text-muted: #6b7280;
+      --radius-lg: 16px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --transition-fast: 180ms ease-out;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e6edf5 0, #f4f6f9 55%, #f9fafb 100%);
+      color: var(--color-text-main);
       line-height: 1.6;
     }
-    .container { 
-      max-width: 900px; 
-      margin: auto; 
-      background: white; 
-      padding: 40px; 
-      border-radius: 12px; 
-      box-shadow: 0 0 12px rgba(0,0,0,0.05);
+
+    .page { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .site-header {
+      padding: 18px 24px;
+      background: linear-gradient(to right, rgba(0,58,93,0.97), rgba(0,91,140,0.95));
+      backdrop-filter: blur(16px);
+      color: #f9fafb;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
-    h1 {
-      margin-top: 0;
+
+    .site-header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
     }
-    a {
-      color: #0056d6;
+
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .brand-mark {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: radial-gradient(circle at 30% 20%, #00a3e0, #003a5d);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+    }
+
+    .brand-text span:first-child { font-weight: 600; font-size: 0.95rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .brand-text span:last-child { font-size: 0.78rem; opacity: 0.9; }
+
+    main { flex: 1; padding: 32px 16px 48px; display: flex; align-items: stretch; }
+    .shell { max-width: 1120px; width: 100%; margin: 0 auto; }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1.3fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 900px) { .layout-grid { grid-template-columns: 1fr; } }
+
+    .hero-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      padding: 4px 10px;
+      background: rgba(0,58,93,0.06);
+      color: var(--color-primary);
+      font-size: 0.76rem;
+      font-weight: 600;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    h1 { margin: 0 0 8px; color: var(--color-primary); font-size: 1.9rem; }
+    .hero-subtitle { margin-bottom: 18px; font-size: 0.98rem; color: var(--color-text-muted); }
+    .hero-callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; }
+
+    .pill {
+      background: #f0f4f9;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,91,140,0.12);
+      font-size: 0.8rem;
+      color: var(--color-primary-light);
+    }
+
+    .section { margin-top: 22px; padding-top: 8px; border-top: 1px solid var(--color-border); }
+    .section-title { font-size: 1rem; font-weight: 600; color: var(--color-primary); }
+
+    .bullets { list-style: none; padding: 0; margin: 8px 0; }
+    .bullets li { display: flex; gap: 8px; margin-bottom: 4px; font-size: 0.9rem; }
+    .bullets li::before { content: "•"; color: var(--color-primary-light); font-weight: 700; }
+
+    .highlight-box {
+      background: #f0f5fb;
+      border: 1px solid rgba(0,90,140,0.18);
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 0.86rem;
+    }
+
+    .side-column { display: flex; flex-direction: column; gap: 18px; }
+    .info-card { background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--color-border); padding: 16px 18px; }
+    .info-heading { font-size: 0.9rem; font-weight: 600; color: var(--color-primary); }
+
+    .form-card { background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--color-border); padding: 16px 18px; }
+
+    footer {
+      padding: 12px 16px 20px;
+      font-size: 0.78rem;
+      color: #9ca3af;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Welcome to BRP Surveys</h1>
+  <div class="page">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div class="brand-text">
+            <span>BRP Surveys</span>
+            <span>Market research on behalf of our clients</span>
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <p>
-      You likely received an email from Blue Ridge Partners regarding a survey.
-      We are a consulting firm that conducts market research on behalf of our clients.
-    </p>
+    <main>
+      <div class="shell">
+        <div class="layout-grid">
 
-    <h2>Privacy Policy</h2>
+          <!-- LEFT COLUMN -->
+          <section class="hero-card">
+            <div class="eyebrow"><span>Participant Information</span></div>
+            <h1>Welcome to BRP Surveys</h1>
 
-    <p>
-      Blue Ridge collects personal information you provide (for example when registering for events, jobs or alerts)
-      as well as information automatically generated when you use their websites (such as IP addresses and cookie data)
-      and may also obtain data from third parties.
-    </p>
+            <p class="hero-subtitle">
+              You likely received an email invitation to participate in a survey.
+              <strong>We conduct market research on behalf of our clients, and your contact information may have been shared with us specifically for this purpose.</strong><br><br>
+              As part of their <strong>privacy and data management policies</strong>, clients typically inform individuals that when you
+              <strong>consent to receive communications</strong> or provide your information, it may be shared with
+              <strong>trusted partners</strong> to support activities like market research.
+            </p>
 
-    <p>
-      We use this information to fulfil requests, personalise content, improve services,
-      prevent fraud, comply with legal obligations, and for related business purposes.
-    </p>
+            <div class="hero-callouts">
+              <div class="pill"><strong>Transparent:</strong> Why you were contacted</div>
+              <div class="pill"><strong>Secure:</strong> How your data is used</div>
+              <div class="pill"><strong>In control:</strong> How to unsubscribe</div>
+            </div>
 
-    <p>
-      We do not sell your personal data, and our sites do not use third-party advertising cookies
-      or track you across unrelated websites.
-    </p>
+            <p class="hero-note">
+              We do <strong>not</strong> conduct additional or ongoing follow-up communications beyond the survey process.
+            </p>
 
-    <p>
-      You have rights under certain laws (including California’s) to access, correct, delete or restrict the processing
-      of your data.
-    </p>
+            <section class="section">
+              <h2 class="section-title">Your Privacy</h2>
+              <p>We collect:</p>
+              <ul class="bullets">
+                <li>Information you provide, such as survey responses or inquiries</li>
+                <li>Technical information (IP address, cookies)</li>
+                <li>Information shared by clients to enable survey outreach</li>
+              </ul>
 
-    <p>
-      The policy is effective as of March 15, 2022 and may be updated for significant changes.
-    </p>
+              <p>We use this information solely to:</p>
+              <ul class="bullets">
+                <li>Conduct research</li>
+                <li>Fulfill requests</li>
+                <li>Prevent fraud</li>
+                <li>Comply with legal obligations</li>
+              </ul>
 
-    <p>
-      For more details on our privacy policy, please visit our website:<br>
-      <a href="https://www.blueridgepartners.com/privacy-policy/" target="_blank">
-        https://www.blueridgepartners.com/privacy-policy/
-      </a>
-    </p>
+              <div class="highlight-box">
+                <strong>Important:</strong><br>
+                • We do <strong>not sell</strong> your personal information.<br>
+                • We do <strong>not</strong> use third-party advertising cookies.<br>
+                • We do <strong>not</strong> track your activity across unrelated websites.
+              </div>
 
-    <p>
-      <strong>For any questions, please reach out to:</strong><br>
-      <a href="mailto:marketresearch@brpsurveys.com">marketresearch@brpsurveys.com</a>
-    </p>
+              <p>
+                Full Privacy Policy:
+                <a href="https://www.blueridgepartners.com/privacy-policy/" target="_blank">
+                  https://www.blueridgepartners.com/privacy-policy/
+                </a>
+              </p>
+            </section>
+
+            <section class="section">
+              <h2 class="section-title">Incentives</h2>
+              <p>Some studies include incentives. Please note:</p>
+
+              <ul class="bullets">
+                <li>You will complete a short set of screening questions.</li>
+                <li>You may be informed that your segment is full or that you don’t qualify.</li>
+                <li>If you do <strong>not</strong> qualify or quota is full, <strong>you will not receive an incentive</strong>.</li>
+                <li>If you qualify and complete the survey, BRP Surveys will follow up to provide your incentive.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2 class="section-title">Unsubscribe / Do Not Contact</h2>
+              <div class="highlight-box">
+                To unsubscribe:<br>
+                • Reply to your survey invitation email with <strong>“Unsubscribe”</strong><br>
+                • Or email: <strong><a href="mailto:marketresearch@brpsurveys.com">
+                    marketresearch@brpsurveys.com
+                  </a></strong>
+              </div>
+            </section>
+
+            <section class="section">
+              <h2 class="section-title">Questions?</h2>
+              <p>Email us at:
+                <a href="mailto:marketresearch@brpsurveys.com">marketresearch@brpsurveys.com</a>
+              </p>
+            </section>
+
+          </section>
+
+          <!-- RIGHT COLUMN -->
+          <aside class="side-column">
+
+            <div class="info-card">
+              <h3 class="info-heading">Summary</h3>
+              <p class="info-text">
+                Your information was shared with us in line with client privacy policies to conduct market research. We do not send ongoing communications.
+              </p>
+            </div>
+
+            <!-- FORM CARD WITH COGNITO EMBED -->
+            <div class="form-card">
+              <h3 class="info-heading">Optional: Request changes in writing</h3>
+              <p class="form-description">
+                You may submit an unsubscribe request, data request, or question here instead of emailing us.
+              </p>
+
+<div id="cognito-form-wrapper">
+  <div id="cognito-spinner" class="form-spinner-wrapper">
+    <div class="spinner" aria-label="Loading form…" role="status"></div>
   </div>
+
+  <!-- Cognito form will render below -->
+  <script src="https://www.cognitoforms.com/f/seamless.js"
+          data-key="NgGQHPhoGEahyWn3WTs5Sg"
+          data-form="1"></script>
+</div>
+
+              <p class="form-hint" style="margin-top:6px;">
+                We will use this information solely to process and respond to your request.
+              </p>
+            </div>
+
+          </aside>
+
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      © 2025 Blue Ridge Partners. All Rights Reserved.
+    </footer>
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var wrapper = document.getElementById("cognito-form-wrapper");
+    var spinner = document.getElementById("cognito-spinner");
+    if (!wrapper || !spinner) return;
+
+    // Check periodically for the Cognito iframe
+    var attempts = 0;
+    var maxAttempts = 50; // ~15 seconds at 300ms
+    var interval = setInterval(function () {
+      attempts++;
+      var iframe = wrapper.querySelector("iframe");
+      if (iframe) {
+        spinner.style.display = "none";
+        clearInterval(interval);
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+      }
+    }, 300);
+  });
+</script>
+  
 </body>
 </html>
